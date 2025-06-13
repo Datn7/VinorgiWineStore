@@ -19,16 +19,70 @@ namespace VinorgiWineStore.Controllers
             Environment = environment;
         }
 
-        public IActionResult Index(int pageIndex, string? search)
+        public IActionResult Index(int pageIndex, string? search, string? column, string? orderBy)
         {
             IQueryable<Product> query = context.Products;
 
+            //search functionality
             if (search != null)
             {
                 query = query.Where(p => p.Name.Contains(search) || p.Brand.Contains(search));
             }
 
-            query = query.OrderByDescending(p => p.Id);
+            //sort functionality
+            string[] validColumns = { "Id", "Name", "Brand", "Category", "Price", "CreatedAt" };
+            string[] validOrderBy = { "desc", "asc" };
+
+            if (!validColumns.Contains(column))
+            {
+                column = "Id";
+            }
+
+            if (!validOrderBy.Contains(orderBy))
+            {
+                orderBy = "desc";
+            }
+
+            if (column == "Id")
+            {
+                query = orderBy == "asc"
+                    ? query.OrderBy(p => p.Id)
+                    : query.OrderByDescending(p => p.Id);
+            }
+            else if (column == "Name")
+            {
+                query = orderBy == "asc"
+                    ? query.OrderBy(p => p.Name)
+                    : query.OrderByDescending(p => p.Name);
+            }
+            else if (column == "Brand")
+            {
+                query = orderBy == "asc"
+                    ? query.OrderBy(p => p.Brand)
+                    : query.OrderByDescending(p => p.Brand);
+            }
+            else if (column == "Category")
+            {
+                query = orderBy == "asc"
+                    ? query.OrderBy(p => p.Category)
+                    : query.OrderByDescending(p => p.Category);
+            }
+            else if (column == "Price")
+            {
+                query = orderBy == "asc"
+                    ? query.OrderBy(p => p.Price)
+                    : query.OrderByDescending(p => p.Price);
+            }
+            else if (column == "CreatedAt")
+            {
+                query = orderBy == "asc"
+                    ? query.OrderBy(p => p.CreatedAt)
+                    : query.OrderByDescending(p => p.CreatedAt);
+            }
+
+
+
+            //query = query.OrderByDescending(p => p.Id);
 
             if (pageIndex < 1)
             {
@@ -44,6 +98,8 @@ namespace VinorgiWineStore.Controllers
             ViewData["PageIndex"] = pageIndex;
             ViewData["TotalPages"] = totalPages;
             ViewData["Search"] = search ?? "";
+            ViewData["Column"] = column;
+            ViewData["OrderBy"] = orderBy;
 
             return View(products);
         }
