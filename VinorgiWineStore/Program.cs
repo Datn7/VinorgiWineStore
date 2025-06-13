@@ -1,7 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using VinorgiWineStore.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+//add dbcontext
+builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    opt.UseSqlServer(connectionString);
+});
 
 var app = builder.Build();
 
