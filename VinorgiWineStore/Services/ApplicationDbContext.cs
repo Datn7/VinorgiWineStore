@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VinorgiWineStore.Models;
 
 namespace VinorgiWineStore.Services
 {
@@ -11,5 +12,7 @@ namespace VinorgiWineStore.Services
         protected ApplicationDbContext()
         {
         }
+
+        public DbSet<Product> Products { get; set; }
     }
 }
